@@ -1,0 +1,28 @@
+# A porta padrão e recomendada para o Eureka Server é a 8761
+server:
+  port: 8761
+
+# Nome da aplicação
+spring:
+  application:
+    name: eureka-server
+
+# Configuração específica do Eureka Server
+eureka:
+  instance:
+    # Em um ambiente Docker, é crucial usar o nome do serviço do container
+    # em vez de 'localhost', para que outros containers possam encontrá-lo.
+    hostname: eureka-server
+  client:
+    # Como este é o servidor, ele não deve tentar se registrar com ninguém.
+    register-with-eureka: false
+    # Ele também não precisa buscar o registro de outros servidores (neste caso).
+    fetch-registry: false
+    service-url:
+      # Esta configuração aponta para si mesmo, mas é desativada pelas flags acima.
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
